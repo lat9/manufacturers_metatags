@@ -138,29 +138,37 @@ switch ($_GET['main_page']) {
       }
     } else {
       if (isset($_GET['manufacturers_id'])) {
-//-BOF-Julian cortes Meta-tags manufacturers-modificacion  *** 1 of 2 ***
+//-bof-manufacturers_metatags-lat9  *** 1 of 1 ***
+//-Julian cortes Meta-tags manufacturers-modificacion
         $manufacturer_metatag = $db->Execute("SELECT * FROM " . TABLE_MANUFACTURERS_META . " WHERE manufacturers_id = " . (int)$_GET['manufacturers_id'] . " AND language_id = " . (int)$_SESSION['languages_id'] . " LIMIT 1");
         if (!$manufacturer_metatag->EOF) {
-          define('META_TAG_TITLE', str_replace('"','', zen_clean_html ($manufacturer_metatag->fields['metatags_title'])));
-          define('META_TAG_DESCRIPTION', str_replace('"','', zen_clean_html ($manufacturer_metatag->fields['metatags_description'])));
-          define('META_TAG_KEYWORDS', str_replace('"','', zen_clean_html ($manufacturer_metatag->fields['metatags_keywords'])));
+          if (zen_not_null (zen_clean_html ($manufacturer_metatag->fields['metatags_title']))) {
+            define('META_TAG_TITLE', str_replace('"','', zen_clean_html ($manufacturer_metatag->fields['metatags_title'])));
+            
+          }
+          if (zen_not_null (zen_clean_html ($manufacturer_metatag->fields['metatags_description']))) {
+            define('META_TAG_DESCRIPTION', str_replace('"','', zen_clean_html ($manufacturer_metatag->fields['metatags_description'])));
+            
+          }
+          if (zen_not_null (zen_clean_html ($manufacturer_metatag->fields['metatags_keywords']))) {
+            define('META_TAG_KEYWORDS', str_replace('"','', zen_clean_html ($manufacturer_metatag->fields['metatags_keywords'])));
+            
+          }
+        }
+        $sql = "select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'";
+        $manufacturer_metatags = $db->Execute($sql);
+        if ($manufacturer_metatags->EOF) {
+          if (!defined ('META_TAG_TITLE')) define('META_TAG_TITLE', TITLE . TAGLINE);
+          if (!defined ('META_TAG_DESCRIPTION')) define('META_TAG_DESCRIPTION', PRIMARY_SECTION . str_replace(array("'",'"'),'',strip_tags(HEADING_TITLE)) . SECONDARY_SECTION . KEYWORDS);
+          if (!defined ('META_TAG_KEYWORDS')) define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . str_replace(array("'",'"'),'',strip_tags(HEADING_TITLE)));
           
         } else {
-//-EOF Julian MOdificacion Meta-tags manufacturer  *** 1 of 2 ***
-          $sql = "select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'";
-          $manufacturer_metatags = $db->Execute($sql);
-          if ($manufacturer_metatags->EOF) {
-            define('META_TAG_TITLE', TITLE . TAGLINE);
-            define('META_TAG_DESCRIPTION', PRIMARY_SECTION . str_replace(array("'",'"'),'',strip_tags(HEADING_TITLE)) . SECONDARY_SECTION . KEYWORDS);
-            define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . str_replace(array("'",'"'),'',strip_tags(HEADING_TITLE)));
-          } else {
-            define('META_TAG_TITLE', str_replace('"','', $manufacturer_metatags->fields['manufacturers_name'] . PRIMARY_SECTION . TITLE . TAGLINE));
-            define('META_TAG_DESCRIPTION', str_replace('"','',TITLE . PRIMARY_SECTION . $manufacturer_metatags->fields['manufacturers_name'] . SECONDARY_SECTION . KEYWORDS));
-            define('META_TAG_KEYWORDS', str_replace('"','', $manufacturer_metatags->fields['manufacturers_name'] . METATAGS_DIVIDER . KEYWORDS));
-          }
-//-BOF-->Julian cortes Meta -tags manufacturers-modificacion  *** 2 of 2 ***
+          if (!defined ('META_TAG_TITLE')) define('META_TAG_TITLE', str_replace('"','', $manufacturer_metatags->fields['manufacturers_name'] . PRIMARY_SECTION . TITLE . TAGLINE));
+          if (!defined ('META_TAG_DESCRIPTION')) define('META_TAG_DESCRIPTION', str_replace('"','',TITLE . PRIMARY_SECTION . $manufacturer_metatags->fields['manufacturers_name'] . SECONDARY_SECTION . KEYWORDS));
+          if (!defined ('META_TAG_KEYWORDS')) define('META_TAG_KEYWORDS', str_replace('"','', $manufacturer_metatags->fields['manufacturers_name'] . METATAGS_DIVIDER . KEYWORDS));
+          
         }
-//-EOF-Julian MOdificacion Meta-tags manufacturer  *** 2 of 2 ***
+//-eof-manufacturers_metatags-lat9  *** 1 of 1 ***
       } else {
         // nothing custom main page
         $meta_tags_over_ride = true;
