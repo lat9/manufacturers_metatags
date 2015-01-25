@@ -3,32 +3,16 @@
  * meta_tags module
  *
  * @package modules
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2008 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: meta_tags.php 6863 2007-08-27 16:06:25Z drbyte $
+ * @version $Id: meta_tags.php 11202 2008-11-23 09:18:34Z drbyte $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_START_META_TAGS');
-
-
-/////////////////////////////////////////////////////////
-// Moved to /includes/languages/english/meta_tags.php
-//
-// Define Primary Section Output
-//  define('PRIMARY_SECTION', ' : ');
-
-// Define Secondary Section Output
-//  define('SECONDARY_SECTION', ' - ');
-
-// Define Tertiary Section Output
-//  define('TERTIARY_SECTION', ', ');
-
-//
-/////////////////////////////////////////////////////////
 
 // Add tertiary section to site tagline
 if (strlen(SITE_TAGLINE) > 1) {
@@ -40,7 +24,7 @@ if (strlen(SITE_TAGLINE) > 1) {
 $review_on = "";
 $keywords_string_metatags = "";
 $meta_tags_over_ride = false;
-if (!defined('METATAGS_DIVIDER')) define('METATAGS_DIVIDER', ' ');
+if (!defined('METATAGS_DIVIDER')) define('METATAGS_DIVIDER', ', ');
 
 // Get all top category names for use with web site keywords
 $sql = "select cd.categories_name from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = 0 and c.categories_id = cd.categories_id and cd.language_id='" . (int)$_SESSION['languages_id'] . "' and c.categories_status=1";
@@ -80,7 +64,6 @@ switch ($_GET['main_page']) {
   break;
 
   case 'advanced_search_result':
-  define('META_TAG_TITLE',$_GET['keyword'].PRIMARY_SECTION.TITLE.TAGLINE); 
   case 'password_forgotten':
   define('META_TAG_TITLE', NAVBAR_TITLE_2 . PRIMARY_SECTION . TITLE . TAGLINE);
   define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . NAVBAR_TITLE_2 . SECONDARY_SECTION . KEYWORDS);
@@ -99,9 +82,9 @@ switch ($_GET['main_page']) {
   break;
 
   case ($this_is_home_page):
-  define('META_TAG_TITLE', (HOME_PAGE_TITLE != '' ? HOME_PAGE_TITLE : (defined('NAVBAR_TITLE') ? NAVBAR_TITLE . PRIMARY_SECTION : '') . TITLE . TAGLINE));
-  define('META_TAG_DESCRIPTION', (HOME_PAGE_META_DESCRIPTION != '') ? HOME_PAGE_META_DESCRIPTION : TITLE . PRIMARY_SECTION . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) . SECONDARY_SECTION . KEYWORDS);
-  define('META_TAG_KEYWORDS', (HOME_PAGE_META_KEYWORDS != '') ? HOME_PAGE_META_KEYWORDS : KEYWORDS . METATAGS_DIVIDER . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) );
+  define('META_TAG_TITLE', (defined('HOME_PAGE_TITLE') && HOME_PAGE_TITLE != '' ? HOME_PAGE_TITLE : (defined('NAVBAR_TITLE') ? NAVBAR_TITLE . PRIMARY_SECTION : '') . TITLE . TAGLINE));
+  define('META_TAG_DESCRIPTION', (defined('HOME_PAGE_META_DESCRIPTION') && HOME_PAGE_META_DESCRIPTION != '') ? HOME_PAGE_META_DESCRIPTION : TITLE . PRIMARY_SECTION . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) . SECONDARY_SECTION . KEYWORDS);
+  define('META_TAG_KEYWORDS', (defined('HOME_PAGE_META_KEYWORDS') && HOME_PAGE_META_KEYWORDS != '') ? HOME_PAGE_META_KEYWORDS : KEYWORDS . METATAGS_DIVIDER . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) );
   break;
 
   case 'index':
@@ -155,32 +138,29 @@ switch ($_GET['main_page']) {
       }
     } else {
       if (isset($_GET['manufacturers_id'])) {
-        ///BOF-->Julian cortes Meta -tags manufacturers-modificacion
-		
-		$manufacturer_metatag= $db->Execute("select *
-                               from ".TABLE_MANUFACTURERS_META.
-                               " where manufacturers_id = '" . (int)$_GET['manufacturers_id']. "'
-                               and language_id = '" . (int)$_SESSION['languages_id'] . "'");
-          if ($manufacturer_metatag->RecordCount() > 0) {
-		            define('META_TAG_TITLE', str_replace('"','',$manufacturer_metatag->fields['metatags_title']));
-					define('META_TAG_DESCRIPTION', str_replace('"','',$manufacturer_metatag->fields['metatags_description']));
-					define('META_TAG_KEYWORDS', str_replace('"','',$manufacturer_metatag->fields['metatags_keywords']));
-          }else{
-	       ////EOF Julian MOdificacion Meta-tags manufacturer
-				$sql = "select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'";
-				$manufacturer_metatags = $db->Execute($sql);
-				if ($manufacturer_metatags->EOF) {
-			define('META_TAG_TITLE', TITLE . TAGLINE);
-			define('META_TAG_DESCRIPTION', PRIMARY_SECTION . str_replace(array("'",'"'),'',strip_tags(HEADING_TITLE)) . SECONDARY_SECTION . KEYWORDS);
-			define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . str_replace(array("'",'"'),'',strip_tags(HEADING_TITLE)));
-				} else {
-					define('META_TAG_TITLE', str_replace('"','', $manufacturer_metatags->fields['manufacturers_name'] . PRIMARY_SECTION . TITLE . TAGLINE));
-					define('META_TAG_DESCRIPTION', str_replace('"','',PRIMARY_SECTION . $manufacturer_metatags->fields['manufacturers_name'] . SECONDARY_SECTION . KEYWORDS));
-			define('META_TAG_KEYWORDS', str_replace('"','', $manufacturer_metatags->fields['manufacturers_name'] . METATAGS_DIVIDER . KEYWORDS));
-				}
-      ///BOF-->Julian cortes Meta -tags manufacturers-modificacion
-	  }
-	    ////EOF Julian MOdificacion Meta-tags manufacturer
+//-BOF-Julian cortes Meta-tags manufacturers-modificacion  *** 1 of 2 ***
+        $manufacturer_metatag = $db->Execute("SELECT * FROM " . TABLE_MANUFACTURERS_META . " WHERE manufacturers_id = " . (int)$_GET['manufacturers_id'] . " AND language_id = " . (int)$_SESSION['languages_id'] . " LIMIT 1");
+        if (!$manufacturer_metatag->EOF) {
+          define('META_TAG_TITLE', str_replace('"','', zen_clean_html ($manufacturer_metatag->fields['metatags_title'])));
+          define('META_TAG_DESCRIPTION', str_replace('"','', zen_clean_html ($manufacturer_metatag->fields['metatags_description'])));
+          define('META_TAG_KEYWORDS', str_replace('"','', zen_clean_html ($manufacturer_metatag->fields['metatags_keywords'])));
+          
+        } else {
+//-EOF Julian MOdificacion Meta-tags manufacturer  *** 1 of 2 ***
+          $sql = "select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'";
+          $manufacturer_metatags = $db->Execute($sql);
+          if ($manufacturer_metatags->EOF) {
+            define('META_TAG_TITLE', TITLE . TAGLINE);
+            define('META_TAG_DESCRIPTION', PRIMARY_SECTION . str_replace(array("'",'"'),'',strip_tags(HEADING_TITLE)) . SECONDARY_SECTION . KEYWORDS);
+            define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . str_replace(array("'",'"'),'',strip_tags(HEADING_TITLE)));
+          } else {
+            define('META_TAG_TITLE', str_replace('"','', $manufacturer_metatags->fields['manufacturers_name'] . PRIMARY_SECTION . TITLE . TAGLINE));
+            define('META_TAG_DESCRIPTION', str_replace('"','',TITLE . PRIMARY_SECTION . $manufacturer_metatags->fields['manufacturers_name'] . SECONDARY_SECTION . KEYWORDS));
+            define('META_TAG_KEYWORDS', str_replace('"','', $manufacturer_metatags->fields['manufacturers_name'] . METATAGS_DIVIDER . KEYWORDS));
+          }
+//-BOF-->Julian cortes Meta -tags manufacturers-modificacion  *** 2 of 2 ***
+        }
+//-EOF-Julian MOdificacion Meta-tags manufacturer  *** 2 of 2 ***
       } else {
         // nothing custom main page
         $meta_tags_over_ride = true;
@@ -271,9 +251,9 @@ switch ($_GET['main_page']) {
         $metatags_keywords = KEYWORDS . METATAGS_DIVIDER . $meta_products_name . METATAGS_DIVIDER;
       }
 
-      define('META_TAG_TITLE', str_replace('"','',$review_on . $meta_products_name));
-      define('META_TAG_DESCRIPTION', str_replace('"','',$metatags_description . ' '));
-      define('META_TAG_KEYWORDS', str_replace('"','',$metatags_keywords));  // KEYWORDS and CUSTOM_KEYWORDS are added above
+      define('META_TAG_TITLE', str_replace('"','',zen_clean_html($review_on . $meta_products_name)));
+      define('META_TAG_DESCRIPTION', str_replace('"','',zen_clean_html($metatags_description . ' ')));
+      define('META_TAG_KEYWORDS', str_replace('"','',zen_clean_html($metatags_keywords)));  // KEYWORDS and CUSTOM_KEYWORDS are added above
 
     } else {
       // build un-customized meta tag
@@ -298,12 +278,12 @@ switch ($_GET['main_page']) {
       }
       $meta_products_name = zen_clean_html($meta_products_name);
 
-      $products_description = zen_truncate_paragraph(strip_tags(stripslashes($product_info_metatags->fields['products_description'])), MAX_META_TAG_DESCRIPTION_LENGTH);
+      $meta_products_description = zen_truncate_paragraph(strip_tags(stripslashes($product_info_metatags->fields['products_description'])), MAX_META_TAG_DESCRIPTION_LENGTH);
 
-      $products_description = zen_clean_html($products_description);
+      $meta_products_description = zen_clean_html($meta_products_description);
 
       define('META_TAG_TITLE', str_replace('"','',$review_on . $meta_products_name . $meta_products_price . PRIMARY_SECTION . TITLE . TAGLINE));
-      define('META_TAG_DESCRIPTION', str_replace('"','',TITLE . ' ' . $meta_products_name . SECONDARY_SECTION . $products_description . ' '));
+      define('META_TAG_DESCRIPTION', str_replace('"','',TITLE . ' ' . $meta_products_name . SECONDARY_SECTION . $meta_products_description . ' '));
       define('META_TAG_KEYWORDS', str_replace('"','',$meta_products_name . METATAGS_DIVIDER . KEYWORDS));
 
     } // CUSTOM META TAGS
