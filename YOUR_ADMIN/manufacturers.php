@@ -103,6 +103,10 @@
                       where manufacturers_id = '" . (int)$manufacturers_id . "'");
         $db->Execute("delete from " . TABLE_MANUFACTURERS_INFO . "
                       where manufacturers_id = '" . (int)$manufacturers_id . "'");
+                      
+//-bof-manufacturers_metatags-lat9  *** 1 of 5 ***
+        $db->Execute ("DELETE FROM " . TABLE_MANUFACTURERS_META . " WHERE manufacturers_id = " . (int)$manufacturers_id);
+//-eof-manufacturers_metatags-lat9  *** 1 of 5 ***
 
         if (isset($_POST['delete_products']) && ($_POST['delete_products'] == 'on')) {
           $products = $db->Execute("select products_id
@@ -121,43 +125,31 @@
 
         zen_redirect(zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page']));
         break;
-		///MODIFICACION JULIAN CORTES ANTON
-		   // bof: categories meta tags
-      case 'update_manufacturer_meta_tags':
-      // add or update meta tags
-      //die('I SEE ' . $action . ' - ' . $_POST['categories_id']);
-      $manufacturers_id = $_POST['manufacturer_id'];
-      //$manufacturers_id= zen_db_prepare_input($_GET['mID']) ;
-	  $languages = zen_get_languages();
-      for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-        $language_id = $languages[$i]['id'];
-        $check = $db->Execute("select *
-                               from ".TABLE_MANUFACTURERS_META
-                               ." where manufacturers_id = '" . (int)$manufacturers_id . "'
-                               and language_id = '" . (int)$language_id . "'");
-        if ($check->RecordCount() > 0) {
-          $action = 'update_manufacturers_meta_tags';
-        } else {
-          $action = 'insert_manufacturers_meta_tags';
+//-bof-manufacturers_metatags-lat9  *** 2 of 5 ***
+///MODIFICACION JULIAN CORTES ANTON
+      case 'update_manufacturer_meta_tags': {
+        $manufacturers_id = (int)$_POST['manufacturer_id'];
+        $languages = zen_get_languages();
+        for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
+          $language_id = (int)$languages[$i]['id'];
+          $sql_data_array = array('metatags_title' => zen_db_prepare_input($_POST['metatags_title'][$language_id]),
+                                  'metatags_keywords' => zen_db_prepare_input($_POST['metatags_keywords'][$language_id]),
+                                  'metatags_description' => zen_db_prepare_input($_POST['metatags_description'][$language_id]));
+          $check = $db->Execute("SELECT * FROM " . TABLE_MANUFACTURERS_META . " WHERE manufacturers_id = $manufacturers_id AND language_id = $language_id LIMIT 1");
+          if ($check->EOF) {
+            $sql_data_array['manufacturers_id'] = $manufacturers_id;
+            $sql_data_array['language_id'] = $language_id;
+            zen_db_perform (TABLE_MANUFACTURERS_META, $sql_data_array);
+            
+          } else {
+            zen_db_perform (TABLE_MANUFACTURERS_META, $sql_data_array, 'update', "manufacturers_id = $manufacturers_id AND language_id = $language_id");
+            
+          }
         }
-        $sql_data_array = array('metatags_title' => zen_db_prepare_input($_POST['metatags_title'][$language_id]),
-                                'metatags_keywords' => zen_db_prepare_input($_POST['metatags_keywords'][$language_id]),
-                                'metatags_description' => zen_db_prepare_input($_POST['metatags_description'][$language_id]));
-
-        if ($action == 'insert_manufacturers_meta_tags') {
-          $insert_sql_data = array('manufacturers_id' => $manufacturers_id,
-                                   'language_id' => $language_id);
-          $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
-
-          zen_db_perform(TABLE_MANUFACTURERS_META, $sql_data_array);
-        } elseif ($action == 'update_manufacturers_meta_tags') {
-          zen_db_perform(TABLE_MANUFACTURERS_META, $sql_data_array, 'update', "manufacturers_id = '" . (int)$manufacturers_id . "' and language_id = '" . (int)$language_id . "'");
-        }
+        zen_redirect (zen_href_link (FILENAME_MANUFACTURERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'mID=' . $manufacturers_id));
+        break;
       }
-       zen_redirect(zen_href_link(FILENAME_MANUFACTURERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'mID=' . $manufacturers_id));
-      //zen_redirect(zen_href_link(FILENAME_MANUFACTURERS, 'cPath=' . $cPath . '&cID=' . $manufacturers_id));
-      break;
-  	 ///BOF-->MODIFICACION JULIAN CORTES ANTON Meta-tags   
+//-eof-manufacturers_metatags-lat9  *** 2 of 5 ***
     }
   }
 ?>
@@ -183,11 +175,17 @@
   }
   // -->
 </script>
-<!--BOFJulian cortes Modificacion Meta manufacturers-->
-<?php if ($action != 'edit_category_meta_tags') { // bof: manufacturer meta tags ?>
-<?php if ($editor_handler != '') include ($editor_handler); ?>
-<?php } // meta tags disable editor eof: manufacturer meta tags?>
-<!--EOF--Fin Julian cortes-->
+<?php
+//-bof-manufacturers_metatags-lat9  *** 3 of 5 ***
+// Julian cortes Modificacion Meta manufacturers
+if ($action != 'edit_category_meta_tags') {
+  if ($editor_handler != '') {
+    include ($editor_handler);
+    
+  }
+}
+//-eof-manufacturers_metatags-lat9  *** 3 of 5 ***
+?>
 </head>
 <body onload="init()">
 <!-- header //-->
@@ -258,13 +256,19 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['mID'] != '') {
                 <td class="dataTableContent" align="right">
                   <?php echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers->fields['manufacturers_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
                   <?php echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers->fields['manufacturers_id'] . '&action=delete') . '">' . zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE) . '</a>'; ?>
-                <!--BOFJULIAN CORTES MODIFICACION Meta-tags-manufacturers-->
-				<? if (zen_get_manufacturer_metatags_manu_keywords($manufacturers->fields['manufacturers_id'] , (int)$_SESSION['languages_id']) or zen_get_manufacturer_metatags_manu_description($manufacturers->fields['manufacturers_id'] , (int)$_SESSION['languages_id'])) {?>
-        <?php echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers->fields['manufacturers_id'] . '&action=edit_manufacturer_meta_tags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '</a>'; ?>
-        <?} else {?>
-        <?php echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers->fields['manufacturers_id'] . '&action=edit_manufacturer_meta_tags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF) . '</a>'; 
-		}?>
-				<!--EOF --fin Modificacion Meta-tags-manufacturers-->
+<?php
+//-bof-manufacturers_metatags-lat9  *** 4 of 5 ***
+//JULIAN CORTES MODIFICACION Meta-tags-manufacturers
+    if (zen_get_manufacturer_metatags_keywords ($manufacturers->fields['manufacturers_id'], $_SESSION['languages_id']) != '' || zen_get_manufacturer_metatags_description ($manufacturers->fields['manufacturers_id'], $_SESSION['languages_id']) != '') {
+      $metatags_icon = zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON);
+      
+    } else {
+      $metatags_icon = zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF);
+      
+    }
+    echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers->fields['manufacturers_id'] . '&action=edit_manufacturer_meta_tags') . '">' . $metatags_icon . '</a>';
+//-eof-manufacturerd_metatags-lat9  *** 4 of 5 ***
+?>
 				<?php if (isset($mInfo) && is_object($mInfo) && ($manufacturers->fields['manufacturers_id'] == $mInfo->manufacturers_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, zen_get_all_get_params(array('mID')) . 'mID=' . $manufacturers->fields['manufacturers_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
                 </td>
               </tr>
@@ -295,39 +299,41 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['mID'] != '') {
   $contents = array();
 
   switch ($action) {
-    //Bof-->Julian cortes anton Modificacion--->Meta-tags manufacturers
-    case 'edit_manufacturer_meta_tags':
-	 $manufacturers_id = zen_db_prepare_input($_GET['mID']);
-    $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_MANUFACTURER_META_TAGS . '</strong>');
-    $contents = array('form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'action=update_manufacturer_meta_tags&mID=' . $manufacturers_id, 'post', 'enctype="multipart/form-data"') . zen_draw_hidden_field('manufacturer_id', $manufacturers_id ));
-    $contents[] = array('text' => TEXT_EDIT_MANUFACTURER_META_TAGS_INTRO . ' - <strong>' . $manufacturers_id  . ' ' . $mInfo->manufacturers_name . '</strong>');
+//-bof-manufacturers_metatags-lat9  *** 5 of 5 ***
+//Julian cortes anton Modificacion--->Meta-tags manufacturers
+    case 'edit_manufacturer_meta_tags': {
+      $manufacturers_id = (int)zen_db_prepare_input($_GET['mID']);
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_MANUFACTURER_META_TAGS . '</strong>');
+      $contents = array('form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'action=update_manufacturer_meta_tags&mID=' . $manufacturers_id, 'post', 'enctype="multipart/form-data"') . zen_draw_hidden_field('manufacturer_id', $manufacturers_id ));
+      $contents[] = array('text' => TEXT_EDIT_MANUFACTURER_META_TAGS_INTRO . ' - <strong>' . $manufacturers_id  . ' ' . $mInfo->manufacturers_name . '</strong>');
 
-    $languages = zen_get_languages();
+      $languages = zen_get_languages();
 
-    $manufacturer_inputs_string_metatags_title = '';
-    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-		
-      $manufacturer_inputs_string_metatags_title .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_title']) . '&nbsp;' . zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', zen_get_manufacturer_metatags_manu_title($manufacturers_id , $languages[$i]['id']), zen_set_field_length(TABLE_MANUFACTURERS_META, 'metatags_title'));
+      $manufacturer_inputs_string_metatags_title = '';
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {    
+        $manufacturer_inputs_string_metatags_title .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_title']) . '&nbsp;' . zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', zen_get_manufacturer_metatags_title($manufacturers_id , $languages[$i]['id']), zen_set_field_length(TABLE_MANUFACTURERS_META, 'metatags_title'));
+        
+      }
+      $contents[] = array('text' => '<br />' . TEXT_EDIT_MANUFACTURER_META_TAGS_TITLE . $manufacturer_inputs_string_metatags_title);
+
+      $manufacturer_inputs_string_metatags_keywords = '';
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        $manufacturer_inputs_string_metatags_keywords .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_keywords']) . '&nbsp;';
+        $manufacturer_inputs_string_metatags_keywords .= zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', zen_get_manufacturer_metatags_keywords($manufacturers_id , $languages[$i]['id']));
+      }
+      $contents[] = array('text' => '<br />' . TEXT_EDIT_MANUFACTURER_META_TAGS_KEYWORDS . $manufacturer_inputs_string_metatags_keywords);
+
+      $manufacturer_inputs_string_metatags_description = '';
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        $manufacturer_inputs_string_metatags_description .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' ;
+        $manufacturer_inputs_string_metatags_description .= zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', zen_get_manufacturer_metatags_description($manufacturers_id , $languages[$i]['id']));
+      }
+      $contents[] = array('text' => '<br />' . TEXT_EDIT_MANUFACTURERS_META_TAGS_DESCRIPTION.$manufacturer_inputs_string_metatags_description);
+
+      $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image_submit('button_save.gif', IMAGE_SAVE) . ' <a href="' . zen_href_link(FILENAME_MANUFACTURERS, '&mID=' . $manufacturers_id ) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      break;
     }
-	$contents[] = array('text' => '<br />' . TEXT_EDIT_MANUFACTURER_META_TAGS_TITLE . $manufacturer_inputs_string_metatags_title);
-
-    $manufacturer_inputs_string_metatags_keywords = '';
-    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-      $manufacturer_inputs_string_metatags_keywords .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_keywords']) . '&nbsp;' ;
-      $manufacturer_inputs_string_metatags_keywords .= zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', zen_get_manufacturer_metatags_manu_keywords($manufacturers_id , $languages[$i]['id']));
-    }
-    $contents[] = array('text' => '<br />' . TEXT_EDIT_MANUFACTURER_META_TAGS_KEYWORDS . $manufacturer_inputs_string_metatags_keywords);
-
-    $manufacturer_inputs_string_metatags_description = '';
-    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-      $manufacturer_inputs_string_metatags_description .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' ;
-      $manufacturer_inputs_string_metatags_description .= zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', zen_get_manufacturer_metatags_manu_description($manufacturers_id , $languages[$i]['id']));
-    }
-$contents[] = array('text' => '<br />' . TEXT_EDIT_MANUFACTURERS_META_TAGS_DESCRIPTION.$manufacturer_inputs_string_metatags_description);
-
-    $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image_submit('button_save.gif', IMAGE_SAVE) . ' <a href="' . zen_href_link(FILENAME_MANUFACTURERS, '&mID=' . $manufacturers_id ) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
-    break;
-    ///EOF-> JULIAN cortes Modificacion--->Meta-tags manufacturers
+//-eof-manufacturers_metatags-lat9  *** 5 of 5 ***
     case 'new':
       $heading[] = array('text' => '<b>' . TEXT_HEADING_NEW_MANUFACTURER . '</b>');
 
