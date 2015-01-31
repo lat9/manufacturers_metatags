@@ -22,7 +22,7 @@ img { margin-left: 20px; max-width: 95%; }
 </head>
 
 <body>
-<h1>Manufacturers Meta-Tags &mdash; for Zen Cart v1.5.0, v1.5.1, v1.5.2 and v1.5.3</h1>
+<h1>Manufacturers Meta-Tags &mdash; for Zen Cart v1.5.1 through v1.5.4</h1>
 <h3>Version 2.0.0</h3>
 <p>Current Support Thread at Zen Cart Forums: <a href="http://www.zen-cart.com/showthread.php?129006-manufacturers-meta-tags%28keywords-and-title-and-description%29" target="_blank">http://www.zen-cart.com/showthread.php?129006-manufacturers-meta-tags%28keywords-and-title-and-description%29</a></p>
 
@@ -39,14 +39,17 @@ img { margin-left: 20px; max-width: 95%; }
   <li>Rename the one template-override directory (/includes/modules/YOUR_TEMPLATE) to match your cart's active template folder.</li>
   <li>Make a copy of your current <span class="corefile">/YOUR_ADMIN/manufacturers.php</span> file; if you've made previous changes to that file, you'll need to merge those changes with this plugin's updates.</li>
   <li>If you've made previous changes to <span class="template">/includes/modules/YOUR_TEMPLATE/meta_tags.php</span>, you'll need to merge those changes with this plugin's updates.</li>
-  <li>Copy the plugin's files to your store's file system.<ol>
-    <li>/includes/languages/english/extra_definitions/meta_tags_manufacturers.php</li>
-    <li><span class="template">/includes/modules/YOUR_TEMPLATE/meta_tags.php</span></li>
+  <li>Copy <b>only</b> the plugin's <b>admin-level</b> files to your store's file system.<ol>
     <li><span class="corefile">/YOUR_ADMIN/manufacturers.php</span></li>
     <li>/YOUR_ADMIN/includes/extra_datafiles/meta_tags_manufacturers.php</li>
     <li>/YOUR_ADMIN/includes/functions/extra_functions/functions_metatags_manufacturers.php</li>
     <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/manufacturers_metatags.php</li>
     <li>/YOUR_ADMIN/includes/languages/spanish/extra_definitions/manufacturers_metatags.php</li>
+  </ol></li>
+  <li>Log into your Zen Cart's admin-console; this will cause the auto-installer to run, adding the database table: <code>meta_tags_manufacturers_description</code>.</li>
+  <li>Copy the plugin's <b>store-side</b> files to your store's file system.<ol>
+    <li>/includes/languages/english/extra_definitions/meta_tags_manufacturers.php</li>
+    <li><span class="template">/includes/modules/YOUR_TEMPLATE/meta_tags.php</span></li>
   </ol></li>
 </ol>
 
@@ -55,7 +58,7 @@ img { margin-left: 20px; max-width: 95%; }
 <ul>
   <li>v1.0,   2009-06-01 (jucorant): Initial release.</li>
   <li>v1.1,   2009-06-05 (jucorant): Added DB_PREFIX to the extra_datafiles.</li>
-  <li>v2.0.0, 2015-01-25 (lat9):<ol>
+  <li>v2.0.0, 2015-01-30 (lat9):<ol>
     <li>Correct usage of PHP short tags.</li>
     <li>Include database setup in an admin-level auto-installer &mdash; no more SQL installation script.</li>
     <li>Delete meta-tag records if a manufacturer is deleted.</li>
