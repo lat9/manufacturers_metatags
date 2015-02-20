@@ -104,9 +104,9 @@
         $db->Execute("delete from " . TABLE_MANUFACTURERS_INFO . "
                       where manufacturers_id = '" . (int)$manufacturers_id . "'");
                       
-//-bof-manufacturers_metatags-lat9  *** 1 of 5 ***
+//-bof-manufacturers_metatags-lat9  *** 1 of 4 ***
         $db->Execute ("DELETE FROM " . TABLE_MANUFACTURERS_META . " WHERE manufacturers_id = " . (int)$manufacturers_id);
-//-eof-manufacturers_metatags-lat9  *** 1 of 5 ***
+//-eof-manufacturers_metatags-lat9  *** 1 of 4 ***
 
         if (isset($_POST['delete_products']) && ($_POST['delete_products'] == 'on')) {
           $products = $db->Execute("select products_id
@@ -125,7 +125,7 @@
 
         zen_redirect(zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page']));
         break;
-//-bof-manufacturers_metatags-lat9  *** 2 of 5 ***
+//-bof-manufacturers_metatags-lat9  *** 2 of 4 ***
 ///MODIFICACION JULIAN CORTES ANTON
       case 'update_manufacturer_meta_tags': {
         $manufacturers_id = (int)$_POST['manufacturer_id'];
@@ -157,7 +157,7 @@
         zen_redirect (zen_href_link (FILENAME_MANUFACTURERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'mID=' . $manufacturers_id));
         break;
       }
-//-eof-manufacturers_metatags-lat9  *** 2 of 5 ***
+//-eof-manufacturers_metatags-lat9  *** 2 of 4 ***
     }
   }
 ?>
@@ -183,17 +183,6 @@
   }
   // -->
 </script>
-<?php
-//-bof-manufacturers_metatags-lat9  *** 3 of 5 ***
-// Julian cortes Modificacion Meta manufacturers
-if ($action != 'edit_category_meta_tags') {
-  if ($editor_handler != '') {
-    include ($editor_handler);
-    
-  }
-}
-//-eof-manufacturers_metatags-lat9  *** 3 of 5 ***
-?>
 </head>
 <body onload="init()">
 <!-- header //-->
@@ -265,7 +254,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['mID'] != '') {
                   <?php echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers->fields['manufacturers_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
                   <?php echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers->fields['manufacturers_id'] . '&action=delete') . '">' . zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE) . '</a>'; ?>
 <?php
-//-bof-manufacturers_metatags-lat9  *** 4 of 5 ***
+//-bof-manufacturers_metatags-lat9  *** 3 of 4 ***
 //JULIAN CORTES MODIFICACION Meta-tags-manufacturers
     if (zen_get_manufacturer_metatags_keywords ($manufacturers->fields['manufacturers_id'], $_SESSION['languages_id']) != '' || zen_get_manufacturer_metatags_description ($manufacturers->fields['manufacturers_id'], $_SESSION['languages_id']) != '' || zen_get_manufacturer_metatags_title ($manufacturers->fields['manufacturers_id'], $_SESSION['languages_id']) != '') {
       $metatags_icon = zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON);
@@ -275,7 +264,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['mID'] != '') {
       
     }
     echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers->fields['manufacturers_id'] . '&action=edit_manufacturer_meta_tags') . '">' . $metatags_icon . '</a>';
-//-eof-manufacturerd_metatags-lat9  *** 4 of 5 ***
+//-eof-manufacturerd_metatags-lat9  *** 3 of 4 ***
 ?>
 				<?php if (isset($mInfo) && is_object($mInfo) && ($manufacturers->fields['manufacturers_id'] == $mInfo->manufacturers_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, zen_get_all_get_params(array('mID')) . 'mID=' . $manufacturers->fields['manufacturers_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
                 </td>
@@ -307,7 +296,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['mID'] != '') {
   $contents = array();
 
   switch ($action) {
-//-bof-manufacturers_metatags-lat9  *** 5 of 5 ***
+//-bof-manufacturers_metatags-lat9  *** 4 of 4 ***
 //Julian cortes anton Modificacion--->Meta-tags manufacturers
     case 'edit_manufacturer_meta_tags': {
       $manufacturers_id = (int)zen_db_prepare_input($_GET['mID']);
@@ -341,7 +330,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['mID'] != '') {
       $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image_submit('button_save.gif', IMAGE_SAVE) . ' <a href="' . zen_href_link(FILENAME_MANUFACTURERS, '&mID=' . $manufacturers_id ) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     }
-//-eof-manufacturers_metatags-lat9  *** 5 of 5 ***
+//-eof-manufacturers_metatags-lat9  *** 4 of 4 ***
     case 'new':
       $heading[] = array('text' => '<b>' . TEXT_HEADING_NEW_MANUFACTURER . '</b>');
 
