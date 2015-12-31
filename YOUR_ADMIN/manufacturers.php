@@ -44,6 +44,7 @@
                       where manufacturers_id = '" . (int)$manufacturers_id . "'");
       } else {
         $manufacturers_image = new upload('manufacturers_image');
+        $manufacturers_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
         $manufacturers_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
         if ( $manufacturers_image->parse() &&  $manufacturers_image->save()) {
           // remove image from database if none
@@ -338,15 +339,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['mID'] != '') {
       $contents[] = array('text' => TEXT_NEW_INTRO);
       $contents[] = array('text' => '<br>' . TEXT_MANUFACTURERS_NAME . '<br>' . zen_draw_input_field('manufacturers_name', '', zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name')));
       $contents[] = array('text' => '<br>' . TEXT_MANUFACTURERS_IMAGE . '<br>' . zen_draw_file_field('manufacturers_image'));
-      $dir = @dir(DIR_FS_CATALOG_IMAGES);
-      $dir_info[] = array('id' => '', 'text' => "Main Directory");
-      while ($file = $dir->read()) {
-        if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-          $dir_info[] = array('id' => $file . '/', 'text' => $file);
-        }
-      }
-      $dir->close();
-      sort($dir_info);
+      $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
       $default_directory = 'manufacturers/';
 
       $contents[] = array('text' => '<BR />' . TEXT_PRODUCTS_IMAGE_DIR . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory));
@@ -369,15 +362,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['mID'] != '') {
       $contents[] = array('text' => TEXT_EDIT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_NAME . '<br>' . zen_draw_input_field('manufacturers_name', htmlspecialchars($mInfo->manufacturers_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name')));
       $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_IMAGE . '<br>' . zen_draw_file_field('manufacturers_image') . '<br />' . $mInfo->manufacturers_image);
-      $dir = @dir(DIR_FS_CATALOG_IMAGES);
-      $dir_info[] = array('id' => '', 'text' => "Main Directory");
-      while ($file = $dir->read()) {
-        if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-          $dir_info[] = array('id' => $file . '/', 'text' => $file);
-        }
-      }
-      $dir->close();
-      sort($dir_info);
+      $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
       $default_directory = substr( $mInfo->manufacturers_image, 0,strpos( $mInfo->manufacturers_image, '/')+1);
 
       $contents[] = array('text' => '<BR />' . TEXT_PRODUCTS_IMAGE_DIR . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory));

@@ -1,7 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Manufacturers Meta-Tags for Zen Cart&reg;</title>
 
 <style type="text/css">
@@ -15,14 +16,15 @@ h1 { font-size: 20px; }
 h2 { font-size: 16px; }
 ol li, ul li { margin: 5px 0; }
 .corefile, .impt { color: red; }
-.template { color: blue; }
+.template { color: green; }
+.smaller { font-size: smaller; }
 img { margin-left: 20px; max-width: 95%; }
 -->
 </style>
 </head>
 
 <body>
-<h1>Manufacturers Meta-Tags &mdash; for Zen Cart v1.5.1 through v1.5.4</h1>
+<h1>Manufacturers Meta-Tags &mdash; for Zen Cart v1.5.1 through v1.5.5</h1>
 <h3>Version 2.1.2</h3>
 <p>Current Support Thread at Zen Cart Forums: <a href="http://www.zen-cart.com/showthread.php?129006-manufacturers-meta-tags%28keywords-and-title-and-description%29" target="_blank">http://www.zen-cart.com/showthread.php?129006-manufacturers-meta-tags%28keywords-and-title-and-description%29</a></p>
 
@@ -41,13 +43,15 @@ img { margin-left: 20px; max-width: 95%; }
   <li>If you've made previous changes to <span class="template">/includes/modules/YOUR_TEMPLATE/meta_tags.php</span>, you'll need to merge those changes with this plugin's updates.</li>
   <li>Copy <b>only</b> the plugin's <b>admin-level</b> files to your store's file system.<ol>
     <li><span class="corefile">/YOUR_ADMIN/manufacturers.php</span></li>
+    <li>/YOUR_ADMIN/includes/auto_loaders/config.zc155_compatibility.php <span class="smaller">(Added in v2.1.2)</span></li>
     <li>/YOUR_ADMIN/includes/extra_datafiles/meta_tags_manufacturers.php</li>
     <li>/YOUR_ADMIN/includes/functions/extra_functions/functions_metatags_manufacturers.php</li>
+    <li>/YOUR_ADMIN/includes/init_includes/init_zc155_compatibility.php <span class="smaller">(Added in v2.1.2)</span></li>
     <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/manufacturers_metatags.php</li>
     <li>/YOUR_ADMIN/includes/languages/spanish/extra_definitions/manufacturers_metatags.php</li>
   </ol></li>
   <li>Log into your Zen Cart's admin-console; this will cause the auto-installer to run, adding the database table: <code>meta_tags_manufacturers_description</code>.</li>
-  <li>Copy the plugin's <b>store-side</b> files to your store's file system.<ol>
+  <li>Copy the plugin's <b>storefront</b> files to your store's file system.<ol>
     <li>/includes/extra_datafiles/meta_tags_manufacturers.php</li>
     <li><span class="template">/includes/modules/YOUR_TEMPLATE/meta_tags.php</span></li>
   </ol></li>
@@ -78,8 +82,9 @@ img { margin-left: 20px; max-width: 95%; }
       <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/manufacturers_metatags.php</li>
     </ol></li>
   </ol></li>
-  <li>v2.1.2, 2015-xx-xx (lat9):<ol>
+  <li>v2.1.2, 2015-12-31 (lat9):<ol>
     <li>BUGFIX: Correct installation instructions; readme.html change only.</li>
+    <li>CHANGE: Use Zen Cart v1.5.5 for the <span class="corefile">core-file</span> overwrite and the <span class="template">template-override</span>; adds the Zen Cart v1.5.5 compatibility scripts.</li>
   </ol></li>
 </ul>
 
