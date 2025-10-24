@@ -1,12 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manufacturers Meta-Tags for Zen Cart&reg;</title>
-
-<style type="text/css">
-<!--
+<style>
 a, a:active, a:visited { color: #006666; text-decoration: none; }
 a:hover { color:#00CC99; text-decoration: underline; }
 body, p, h1, h2, h3, h4, h5, h6, li, td, dd, dt { font-family: Verdana, AvantGarde, Tahoma, Arial, sans-serif; font-size: 10pt; color: black; padding: 0px; margin: 20px; }
@@ -19,20 +17,19 @@ ol li, ul li { margin: 5px 0; }
 .template { color: green; }
 .smaller { font-size: smaller; }
 img { margin-left: 20px; max-width: 95%; }
--->
 </style>
 </head>
 
 <body>
 <h1>Manufacturers Meta-Tags &mdash; for Zen Cart v1.5.1 through v1.5.5</h1>
 <h3>Version 2.1.2</h3>
-<p>Current Support Thread at Zen Cart Forums: <a href="http://www.zen-cart.com/showthread.php?129006-manufacturers-meta-tags%28keywords-and-title-and-description%29" target="_blank">http://www.zen-cart.com/showthread.php?129006-manufacturers-meta-tags%28keywords-and-title-and-description%29</a></p>
+<p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php/129006-manufacturers-meta-tags(keywords-and-title-and-description)" target="_blank">https://www.zen-cart.com/showthread.php/129006-manufacturers-meta-tags(keywords-and-title-and-description)</a></p>
 
-<hr />
+<hr>
 <h2>Purpose</h2>
 <p>This plugin enables your store to assign manufacturer-specific meta-tag title, keyword and/or description text, in a manner similar to the product-specific meta-tag processing that is built into Zen Cart.</p>
 
-<hr />
+<hr>
 <h2>Installation</h2>
 <p>This plugin has one <span class="corefile">core-file overwrite</span> and one <span class="template">template-override</span> file; you should <strong>always</strong> backup your cart's database and files prior to making any changes.</p>
 <ol>
@@ -57,11 +54,25 @@ img { margin-left: 20px; max-width: 95%; }
   </ol></li>
 </ol>
 
-<hr />
+<hr>
 <h2>Version History</h2>
 <ul>
-  <li>v1.0,   2009-06-01 (jucorant): Initial release.</li>
-  <li>v1.1,   2009-06-05 (jucorant): Added DB_PREFIX to the extra_datafiles.</li>
+  <li>v2.1.2, 2015-12-31 (lat9):<ol>
+    <li>BUGFIX: Correct installation instructions; readme.html change only.</li>
+    <li>CHANGE: Use Zen Cart v1.5.5 for the <span class="corefile">core-file</span> overwrite and the <span class="template">template-override</span>; adds the Zen Cart v1.5.5 compatibility scripts.</li>
+  </ol></li>
+  <li>v2.1.1, 2015-03-07 (lat9):<ol>
+    <li>BUGFIX: Correct admin-level constant name.</li>
+    <li>Changed:<ol>
+      <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/manufacturers_metatags.php</li>
+    </ol></li>
+  </ol></li>
+  <li>v2.1.0, 2015-02-20 (lat9):<ol>
+    <li>CHANGE: Don't enable admin-level HTML editor &mdash; any HTML content is stripped from the meta-tags prior to display, anyway!</li>
+    <li>Changed:<ol>
+      <li>/YOUR_ADMIN/manufacturers.php</li>
+    </ol></li>
+  </ol></li>
   <li>v2.0.0, 2015-01-30 (lat9):<ol>
     <li>Correct usage of PHP short tags.</li>
     <li>Include database setup in an admin-level auto-installer &mdash; no more SQL installation script.</li>
@@ -70,22 +81,8 @@ img { margin-left: 20px; max-width: 95%; }
     <li>Standardize admin and template-override folder names for the distribution.</li>
     <li>Move meta_tags.php into a template-override folder.</li>
   </ol></li>
-  <li>v2.1.0, 2015-02-20 (lat9):<ol>
-    <li>CHANGE: Don't enable admin-level HTML editor &mdash; any HTML content is stripped from the meta-tags prior to display, anyway!</li>
-    <li>Changed:<ol>
-      <li>/YOUR_ADMIN/manufacturers.php</li>
-    </ol></li>
-  </ol></li>
-  <li>v2.1.1, 2015-03-07 (lat9):<ol>
-    <li>BUGFIX: Correct admin-level constant name.</li>
-    <li>Changed:<ol>
-      <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/manufacturers_metatags.php</li>
-    </ol></li>
-  </ol></li>
-  <li>v2.1.2, 2015-12-31 (lat9):<ol>
-    <li>BUGFIX: Correct installation instructions; readme.html change only.</li>
-    <li>CHANGE: Use Zen Cart v1.5.5 for the <span class="corefile">core-file</span> overwrite and the <span class="template">template-override</span>; adds the Zen Cart v1.5.5 compatibility scripts.</li>
-  </ol></li>
+  <li>v1.1,   2009-06-05 (jucorant): Added DB_PREFIX to the extra_datafiles.</li>
+  <li>v1.0,   2009-06-01 (jucorant): Initial release.</li>
 </ul>
 
 </body>
