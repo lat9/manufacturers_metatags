@@ -21,42 +21,51 @@ img { margin-left: 20px; max-width: 95%; }
 </head>
 
 <body>
-<h1>Manufacturers Meta-Tags &mdash; for Zen Cart v1.5.1 through v1.5.5</h1>
-<h3>Version 2.1.2</h3>
+<h1>Manufacturers Meta-Tags &mdash; for Zen Cart v2.1.0 and later</h1>
+<h3>Version 3.0.0</h3>
 <p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php/129006-manufacturers-meta-tags(keywords-and-title-and-description)" target="_blank">https://www.zen-cart.com/showthread.php/129006-manufacturers-meta-tags(keywords-and-title-and-description)</a></p>
 
 <hr>
 <h2>Purpose</h2>
-<p>This plugin enables your store to assign manufacturer-specific meta-tag title, keyword and/or description text, in a manner similar to the product-specific meta-tag processing that is built into Zen Cart.</p>
+<p>This <em>encapsulated</em> plugin enables your store to assign manufacturer-specific meta-tag title, keyword and/or description text, in a manner similar to the product-specific meta-tag processing that is built into Zen Cart. Once the plugin is installed, you'll see additional fields to be entered when you edit (or create) a manufacturer; those values are set into the like-named page metatag when displaying that manufacturer's product listing on your storefront.</p>
+<ul>
+    <li>Metatags Title</li>
+    <li>Metatags Keywords</li>
+    <li>Metatags Description</li>
+</ul>
+<p><strong>Notes:</strong></p>
+<ol>
+    <li>If you have a previous, non-encapsulated, version of this plugin installed, you'll need to remove the files (and core-file overwrite) associated with that version prior to installing an encapsulated version.</li>
+    <li>This plugin relies on a notification added post-zc210 release to provide the metatags' update to a manufacturer.  See <a href="https://github.com/zencart/zencart/commit/dc7b6b6a19d22d4166c6927ddafc984b09ff6b8c" target="_blank">this</a> Zen Cart GitHub commit for details. <b class="impt">Without this notification present, the metatags won't be stored in the database!</b></li>
+</ol>
 
 <hr>
 <h2>Installation</h2>
-<p>This plugin has one <span class="corefile">core-file overwrite</span> and one <span class="template">template-override</span> file; you should <strong>always</strong> backup your cart's database and files prior to making any changes.</p>
+<p>Follow these steps to install the plugin:</p>
 <ol>
-  <li>Unzip the plugin's package file, which you've most likely already done if you're reading this!</li>
-  <li>Rename the /YOUR_ADMIN directory to match your Zen Cart's secret admin-folder name.</li>
-  <li>Rename the one template-override directory (/includes/modules/YOUR_TEMPLATE) to match your cart's active template folder.</li>
-  <li>Make a copy of your current <span class="corefile">/YOUR_ADMIN/manufacturers.php</span> file; if you've made previous changes to that file, you'll need to merge those changes with this plugin's updates.</li>
-  <li>If you've made previous changes to <span class="template">/includes/modules/YOUR_TEMPLATE/meta_tags.php</span>, you'll need to merge those changes with this plugin's updates.</li>
-  <li>Copy <b>only</b> the plugin's <b>admin-level</b> files to your store's file system.<ol>
-    <li><span class="corefile">/YOUR_ADMIN/manufacturers.php</span></li>
-    <li>/YOUR_ADMIN/includes/auto_loaders/config.zc155_compatibility.php <span class="smaller">(Added in v2.1.2)</span></li>
-    <li>/YOUR_ADMIN/includes/extra_datafiles/meta_tags_manufacturers.php</li>
-    <li>/YOUR_ADMIN/includes/functions/extra_functions/functions_metatags_manufacturers.php</li>
-    <li>/YOUR_ADMIN/includes/init_includes/init_zc155_compatibility.php <span class="smaller">(Added in v2.1.2)</span></li>
-    <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/manufacturers_metatags.php</li>
-    <li>/YOUR_ADMIN/includes/languages/spanish/extra_definitions/manufacturers_metatags.php</li>
-  </ol></li>
-  <li>Log into your Zen Cart's admin-console; this will cause the auto-installer to run, adding the database table: <code>meta_tags_manufacturers_description</code>.</li>
-  <li>Copy the plugin's <b>storefront</b> files to your store's file system.<ol>
-    <li>/includes/extra_datafiles/meta_tags_manufacturers.php</li>
-    <li><span class="template">/includes/modules/YOUR_TEMPLATE/meta_tags.php</span></li>
-  </ol></li>
+    <li>Unzip this distribution's zip-file; you'll see a <code>zc_plugins</code> directory, and inside it a <code>ManufacturersMetatags</code> directory, and inside that another directory with a version number.</li>
+    <li>Copy the plugin's <code>ManufacturersMetatags</code> directory to your site's file-system's <code>zc_plugins</code> directory.</li>
+    <li>Log into your Zen Cart admin and go to <em>Modules :: Plugin Manager</em>. Click on <code>Manufacturers Metatags</code>, and click Install, and confirm by clicking Install.</li>
 </ol>
+
+<hr>
+<h2>Uninstalling</h2>
+<p>To uninstall the plugin:</p>
+<ol>
+    <li>Log into your Zen Cart admin  and navigate to <b>Modules :: Plugin Manager</b>.</li>
+    <li>Locate the entry for <b>Manufacturers Metatags</b>, click the associated <code>Un-Install</code> button and confirm the removal.</li>
+</ol>
+<p><b>Note:</b> Uninstalling the plugin <em>does not remove</em> the additional database columns added to the <code>manufacturers_info</code> table. To remove those fields, enter the following in your admin's <b>Tools :: Install SQL Patches</b> tool:</p>
+<pre>
+ALTER TABLE manufacturers_info DROP COLUMN metatags_title, DROP COLUMN metatags_keywords, DROP COLUMN metatags_description;
+</pre>
 
 <hr>
 <h2>Version History</h2>
 <ul>
+  <li>v3.0.0-beta1, 2025-10-29 (lat9):<ol>
+    <li>CHANGE: Convert to an encapsulated <code>zc_plugin</code>.</li>
+  </ol></li>
   <li>v2.1.2, 2015-12-31 (lat9):<ol>
     <li>BUGFIX: Correct installation instructions; readme.html change only.</li>
     <li>CHANGE: Use Zen Cart v1.5.5 for the <span class="corefile">core-file</span> overwrite and the <span class="template">template-override</span>; adds the Zen Cart v1.5.5 compatibility scripts.</li>
