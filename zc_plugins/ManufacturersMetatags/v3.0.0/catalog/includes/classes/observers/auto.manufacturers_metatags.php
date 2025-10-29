@@ -57,10 +57,10 @@ class zcObserverManufacturersMetatags extends \base
         $metatags_title = ($this->metaTags['metatags_title'] === '') ? $this->manufacturers_name : $this->metaTags['metatags_title'];
         zen_define_default('META_TAG_TITLE', str_replace(["'", '"'], '', strip_tags($metatags_title . PRIMARY_SECTION . TITLE . TAGLINE)));
 
-        $metatags_keywords = ($this->metaTags['metatags_keywords'] === '') ? $this->manufacturers_name : $this->metaTags['metatags_keywords'];
-        zen_define_default('META_TAG_KEYWORDS', str_replace(["'", '"'], '', strip_tags($metatags_keywords . METATAGS_DIVIDER . KEYWORDS)));
+        $metatags_keywords = ($this->metaTags['metatags_keywords'] === '') ? $this->manufacturers_name . METATAGS_DIVIDER . KEYWORDS : $this->metaTags['metatags_keywords'];
+        zen_define_default('META_TAG_KEYWORDS', str_replace(["'", '"'], '', strip_tags($metatags_keywords)));
 
-        $metatags_description = ($this->metaTags['metatags_description'] === '') ? $this->manufacturers_name : $this->metaTags['metatags_description'];
-        zen_define_default('META_TAG_DESCRIPTION', str_replace(["'", '"'], '', strip_tags(TITLE . PRIMARY_SECTION . $metatags_description . SECONDARY_SECTION . KEYWORDS)));
+        $metatags_description = ($this->metaTags['metatags_description'] === '') ? $this->manufacturers_name . SECONDARY_SECTION . KEYWORDS : $this->metaTags['metatags_description'];
+        zen_define_default('META_TAG_DESCRIPTION', str_replace(["'", '"'], '', strip_tags(TITLE . PRIMARY_SECTION . $metatags_description)));
     }
 }
