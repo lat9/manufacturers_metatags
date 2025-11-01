@@ -22,7 +22,7 @@ img { margin-left: 20px; max-width: 95%; }
 
 <body>
 <h1>Manufacturers Meta-Tags &mdash; for Zen Cart v2.1.0 and later</h1>
-<h3>Version 3.0.0</h3>
+<h3>Version 3.0.1</h3>
 <p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php/129006-manufacturers-meta-tags(keywords-and-title-and-description)" target="_blank">https://www.zen-cart.com/showthread.php/129006-manufacturers-meta-tags(keywords-and-title-and-description)</a></p>
 
 <hr>
@@ -63,6 +63,9 @@ ALTER TABLE manufacturers_info DROP COLUMN metatags_title, DROP COLUMN metatags_
 <hr>
 <h2>Version History</h2>
 <ul>
+  <li>v3.0.1, 2025-11-01 (lat9):<ol>
+    <li>BUGFIX: Using <var>manufacturersName</var> instead of <var>manufacturers_name</var>; correcting PHP warnings.</li>
+  </ol></li>
   <li>v3.0.0, 2025-10-29 (lat9):<ol>
     <li>CHANGE: Convert to an encapsulated <code>zc_plugin</code>; requires zc210 or later.</li>
   </ol></li>

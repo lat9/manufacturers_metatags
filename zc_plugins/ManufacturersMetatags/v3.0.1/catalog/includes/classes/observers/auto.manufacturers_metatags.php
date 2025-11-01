@@ -3,7 +3,7 @@
 // Part of the Manufacturers Metatags plugin by lat9 (lat9@vinosdefrutastropicales.com).
 // Copyright (C) 2025, Vinos de Frutas Tropicales
 //
-// Last updated: v3.0.0
+// Last updated: v3.0.1
 //
 use Zencart\Plugins\Catalog\ManufacturersMetatags\ManufacturersMetatags;
 
@@ -54,13 +54,13 @@ class zcObserverManufacturersMetatags extends \base
 
     public function notify_module_meta_tags_unspecifiedpage(&$class, string $e, $unused, string $metatag_page_name, bool &$meta_tags_over_ride, string &$metatags_title, string &$metatags_description, string &$metatags_keywords): void
     {
-        $metatags_title = ($this->metaTags['metatags_title'] === '') ? $this->manufacturers_name : $this->metaTags['metatags_title'];
+        $metatags_title = ($this->metaTags['metatags_title'] === '') ? $this->manufacturersName : $this->metaTags['metatags_title'];
         zen_define_default('META_TAG_TITLE', str_replace(["'", '"'], '', strip_tags($metatags_title . PRIMARY_SECTION . TITLE . TAGLINE)));
 
-        $metatags_keywords = ($this->metaTags['metatags_keywords'] === '') ? $this->manufacturers_name . METATAGS_DIVIDER . KEYWORDS : $this->metaTags['metatags_keywords'];
+        $metatags_keywords = ($this->metaTags['metatags_keywords'] === '') ? $this->manufacturersName . METATAGS_DIVIDER . KEYWORDS : $this->metaTags['metatags_keywords'];
         zen_define_default('META_TAG_KEYWORDS', str_replace(["'", '"'], '', strip_tags($metatags_keywords)));
 
-        $metatags_description = ($this->metaTags['metatags_description'] === '') ? $this->manufacturers_name . SECONDARY_SECTION . KEYWORDS : $this->metaTags['metatags_description'];
+        $metatags_description = ($this->metaTags['metatags_description'] === '') ? $this->manufacturersName . SECONDARY_SECTION . KEYWORDS : $this->metaTags['metatags_description'];
         zen_define_default('META_TAG_DESCRIPTION', str_replace(["'", '"'], '', strip_tags(TITLE . PRIMARY_SECTION . $metatags_description)));
     }
 }
