@@ -3,7 +3,7 @@
 // Part of the Manufacturers Metatags plugin by lat9 (lat9@vinosdefrutastropicales.com).
 // Copyright (C) 2025, Vinos de Frutas Tropicales
 //
-// Last updated: v3.0.0
+// Last updated: v3.0.1
 //
 namespace Zencart\Plugins\Catalog\ManufacturersMetatags;
 
@@ -52,17 +52,12 @@ class ManufacturersMetatags
 
     protected function getLanguagesById(): array
     {
-        global $lng;
-        if (isset($lng)) {
-            return $lng->get_languages_by_id();
+        if (!class_exists('language')) {
+            require DIR_FS_CATALOG . DIR_WS_CLASSES . 'language.php';
         }
-        
-        global $languages;
-        $lang_by_id = [];
-        foreach ($languages as $next_lang) {
-            $lang_by_id[$next_lang['id']] = $next_lang;
-        }
-        return $lang_by_id;
+        $languages = new \language();
+
+        return $languages->get_languages_by_id();
     }
 
     public function getAllMetaTags(): array
