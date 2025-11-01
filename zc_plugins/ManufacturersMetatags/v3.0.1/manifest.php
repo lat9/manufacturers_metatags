@@ -1,6 +1,6 @@
 <?php
 return [
-    'pluginVersion' => 'v3.0.0',
+    'pluginVersion' => 'v3.0.1',
     'pluginName' => 'Manufacturers Metatags',
     'pluginDescription' => 'This plugin enables your store to assign manufacturer-specific meta-tag title, keyword and/or description text, in a manner similar to the product-specific meta-tag processing that is built into Zen Cart.',
     'pluginAuthor' => 'lat9',
